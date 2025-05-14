@@ -1,0 +1,293 @@
+Buy all augentations
+
+/** @param {NS} ns **/
+export async function main(ns) {
+    // Replace with the faction you're interested in
+    const factionName = "Sector-12"; // Example faction name
+
+    // Get the list of all available augmentations for the faction
+    const augmentations = ns.singularity.getAugmentationsFromFaction(factionName);
+
+    // Loop through all augmentations and buy them
+    for (let i = 0; i < augmentations.length; i++) {
+        const augmentation = augmentations[i];
+        if (!ns.singularity.hasAugmentation(augmentation)) {
+            ns.print(`Attempting to buy ${augmentation}...`);
+            const cost = ns.singularity.getAugmentationPrice(augmentation);
+            if (ns.getServerMoneyAvailable("home") >= cost) {
+                ns.singularity.purchaseAugmentation(factionName, augmentation);
+                ns.print(`Successfully bought ${augmentation}`);
+            } else {
+                ns.print(`Not enough money to buy ${augmentation}. Required: ${cost}`);
+            }
+        } else {
+            ns.print(`${augmentation} already purchased.`);
+        }
+    }
+}
+
+
+Buy 16 gigabyte server
+
+/** @param {NS} ns **/
+export async function main(ns) {
+    const serverCost = ns.getPurchasedServerCost(16); // Cost of a 16 GB server
+    const playerMoney = ns.getPlayer().money; // The current amount of money you have
+
+    if (playerMoney >= serverCost) {
+        // If you have enough money, buy a 16 GB server
+        const serverName = "server-" + ns.nFormat(ns.getPurchasedServers().length + 1, "00"); // Generate a server name
+        ns.purchaseServer(serverName, 16); // Buy the server with 16 GB RAM
+        ns.tprint(`Successfully bought a 16 GB server: ${serverName}`);
+    } else {
+        ns.tprint("Not enough money to buy a 16 GB server.");
+    }
+}
+
+
+buy 2 terabyte server
+
+/** @param {NS} ns */
+export async function main(ns) {
+    const ram = 2048;
+    const cost = ns.getPurchasedServerCost(ram);
+    const serverLimit = ns.getPurchasedServerLimit();
+    const currentServers = ns.getPurchasedServers();
+
+    // Check if you have reached the server purchase limit
+    if (currentServers.length >= serverLimit) {
+        ns.tprint("You have reached the maximum number of purchased servers.");
+        return;
+    }
+
+    // Check if you have enough money to purchase the server
+    if (ns.getServerMoneyAvailable("home") >= cost) {
+        const hostname = `pserv-${currentServers.length}`;
+        const purchasedHost = ns.purchaseServer(hostname, ram);
+
+        if (purchasedHost) {
+            ns.tprint(`Successfully purchased server: ${purchasedHost}`);
+        } else {
+            ns.tprint("Failed to purchase server.");
+        }
+    } else {
+        ns.tprint("Not enough money to purchase the server.");
+    }
+}
+
+buy 128 gb server
+
+/** @param {NS} ns **/
+export async function main(ns) {
+    const serverCost = ns.getPurchasedServerCost(128); // Cost of a 128 GB server
+    const playerMoney = ns.getPlayer().money; // The current amount of money you have
+
+    if (playerMoney >= serverCost) {
+        // If you have enough money, buy a 128 GB server
+        const serverName = "server-" + ns.nFormat(ns.getPurchasedServers().length + 1, "00"); // Generate a unique server name
+        ns.purchaseServer(serverName, 128); // Buy the server with 128 GB RAM
+        ns.tprint(`Successfully bought a 128 GB server: ${serverName}`);
+    } else {
+        ns.tprint("Not enough money to buy a 128 GB server.");
+    }
+}
+
+
+buy 1 tb server
+
+/** @param {NS} ns **/
+export async function main(ns) {
+    // Price of a 1TB server
+    const serverCost = 1_000_000_000; // 1 TB server costs 1 billion
+
+    // Check if the player has enough money
+    if (ns.getServerMoneyAvailable("home") >= serverCost) {
+        // Buy the server
+        ns.purchaseServer("1TB-Server", 1024);
+        ns.print("Successfully purchased a 1TB server!");
+    } else {
+        ns.print(`Not enough money to purchase the server. You need: $${serverCost}`);
+    }
+}
+
+
+buy 64 gb server
+
+/** @param {NS} ns **/
+export async function main(ns) {
+    const serverCost = ns.getPurchasedServerCost(64); // Cost of a 64 GB server
+    const playerMoney = ns.getPlayer().money; // The current amount of money you have
+
+    if (playerMoney >= serverCost) {
+        // If you have enough money, buy a 64 GB server
+        const serverName = "server-" + ns.nFormat(ns.getPurchasedServers().length + 1, "00"); // Generate a unique server name
+        ns.purchaseServer(serverName, 64); // Buy the server with 64 GB RAM
+        ns.tprint(`Successfully bought a 64 GB server: ${serverName}`);
+    } else {
+        ns.tprint("Not enough money to buy a 64 GB server.");
+    }
+}
+
+
+buy 32 gb server
+
+/** @param {NS} /** @param {NS} ns **/
+export async function main(ns) {
+    const serverCost = ns.getPurchasedServerCost(32); // Cost of a 32 GB server
+    const playerMoney = ns.getPlayer().money; // The current amount of money you have
+
+    if (playerMoney >= serverCost) {
+        // If you have enough money, buy a 32 GB server
+        const serverName = "server-" + ns.nFormat(ns.getPurchasedServers().length + 1, "00"); // Generate a server name
+        ns.purchaseServer(serverName, 32); // Buy the server with 32 GB RAM
+        ns.tprint(`Successfully bought a 32 GB server: ${serverName}`);
+    } else {
+        ns.tprint("Not enough money to buy a 32 GB server.");
+    }
+}
+
+
+Auto hack Iron Gym server
+
+/** @param {NS} ns **/
+export async function main(ns) {
+    const target = "iron-gym";  // The target server
+    const interval = 1000;      // Update interval in milliseconds
+
+    let hackedAmount = 0;       // Track how much has been hacked in total
+
+    // Continuous loop to perform actions and display info
+    while (true) {
+        // Perform the hack and store the amount of money stolen
+        const hackAmount = await ns.hack(target); // Hack the target server
+        hackedAmount += hackAmount; // Add the amount hacked to the total
+
+        // Get the current status of the server's money and security
+        const serverMoney = ns.getServerMoneyAvailable(target);
+        const maxMoney = ns.getServerMaxMoney(target);
+        const securityLevel = ns.getServerSecurityLevel(target);
+        const minSecurityLevel = ns.getServerMinSecurityLevel(target);
+
+        // Build the status text in a compact format
+        const statusText = `
+            Hacked: $${hackedAmount.toLocaleString()} | 
+            Current Money: $${serverMoney.toLocaleString()} / $${maxMoney.toLocaleString()} | 
+            Security: ${securityLevel.toFixed(2)} / ${minSecurityLevel} | 
+            Last Hack: $${hackAmount.toLocaleString()}
+        `;
+
+        // Output the status to the terminal in a more subtle manner
+        ns.print(statusText); // Use print instead of clearTerminal to avoid disruption
+
+        // Wait for the specified interval before performing the next hack
+        await ns.sleep(interval);
+    }
+}
+
+
+iron gym auto hack but faster 
+
+/** @param {NS} ns **/
+export async function main(ns) {
+    const target = "iron-gym";  // The target server
+    const interval = 1000;      // Update interval in milliseconds
+
+    let currentAction = "";     // String to store the current action message
+    let hackedAmount = 0;       // Track how much has been hacked in total
+
+    // Continuous loop to perform actions and display info
+    while (true) {
+        // Perform hacking, weaken, or grow actions
+        const hackAmount = await ns.hack(target); // Hack the target server
+        hackedAmount += hackAmount; // Add the amount hacked to the total
+
+        // Get the current status of the server's money
+        const serverMoney = ns.getServerMoneyAvailable(target);
+        const maxMoney = ns.getServerMaxMoney(target);
+        const securityLevel = ns.getServerSecurityLevel(target);
+        const minSecurityLevel = ns.getServerMinSecurityLevel(target);
+
+        // Build the current action and status text
+        currentAction = `Attacking ${target}...`;
+        const statusText = `
+            Hacked: $${hackedAmount.toLocaleString()}
+            Current Money: $${serverMoney.toLocaleString()} / $${maxMoney.toLocaleString()}
+            Security Level: ${securityLevel.toFixed(2)} / ${minSecurityLevel}
+            Last Hack Amount: $${hackAmount.toLocaleString()}
+        `;
+
+        // Display the status message
+        ns.clearTerminal(); // Clear the terminal screen
+        ns.print(currentAction);
+        ns.print(statusText);
+
+        // Wait for a brief period before performing the next hack
+        await ns.sleep(interval);
+    }
+}
+
+
+list all OWNED servers
+
+/** @param {NS} ns */
+export async function main(ns) {
+    const servers = ns.getPurchasedServers();
+
+    if (servers.length === 0) {
+        ns.tprint("❌ You don't own any servers.");
+        return;
+    }
+
+    ns.tprint("🖥️ Owned Servers Info:\n");
+
+    for (const server of servers) {
+        const maxRam = ns.getServerMaxRam(server);
+        const usedRam = ns.getServerUsedRam(server);
+        const runningScripts = ns.ps(server);
+
+        ns.tprint(`📡 ${server}`);
+        ns.tprint(`   RAM: ${usedRam}GB / ${maxRam}GB`);
+        if (runningScripts.length > 0) {
+            ns.tprint(`   Running Scripts:`);
+            for (const script of runningScripts) {
+                ns.tprint(`     - ${script.filename} (Threads: ${script.threads})`);
+            }
+        } else {
+            ns.tprint(`   No running scripts.`);
+        }
+
+        ns.tprint(""); // Blank line between servers
+    }
+}
+
+
+auto hack n00dles server
+
+/** @param {NS} ns **/
+export async function main(ns) {
+  // Defaults to the n00dles server the script is running on if no target is specified
+  const target = ns.args[0] || "n00dles";
+
+  ns.print("Starting hacking script on target: " + target);
+
+  while (true) {
+    const securityThreshold = ns.getServerMinSecurityLevel(target) + 5;
+    const moneyThreshold = ns.getServerMaxMoney(target) * 0.75;
+
+    if (ns.getServerSecurityLevel(target) > securityThreshold) {
+      // Weaken the server if security level is too high
+      ns.print("Weakening " + target + " due to high security level.");
+      await ns.weaken(target);
+    } else if (ns.getServerMoneyAvailable(target) < moneyThreshold) {
+      // Grow the server's money if it's below our threshold
+      ns.print("Growing " + target + " due to low available money.");
+      await ns.grow(target);
+    } else {
+      // Hack the server if security is low and money is high
+      ns.print("Hacking " + target + ".");
+      const hackedAmount = await ns.hack(target);
+      const formattedAmount = Number(hackedAmount.toFixed(2)).toLocaleString('en-US', { minimumFractionDigits: 2 });
+      ns.toast(`Hacked \$${formattedAmount} from ${target} through ${ns.getHostname()}.`, "success", 5000);
+    }
+  }
+}
