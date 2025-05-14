@@ -291,3 +291,35 @@ export async function main(ns) {
     }
   }
 }
+
+
+sell owned servers (still works i think)
+
+/** @param {NS} ns */
+export async function main(ns) {
+    const servers = ns.getPurchasedServers();
+
+    if (servers.length === 0) {
+        ns.tprint("You don't own any purchased servers to sell.");
+        return;
+    }
+
+    for (const server of servers) {
+        const cost = ns.getPurchasedServerCost(ns.getServerRam(server));
+        const ram = ns.getServerMaxRam(server)[0];
+        
+        // Optionally, confirm if you want to sell each server (you can modify this part if needed)
+        const confirmation = await ns.prompt(`Are you sure you want to sell the server: ${server} with ${ram}GB of RAM?`);
+        
+        if (confirmation) {
+            const success = ns.deleteServer(server);
+            if (success) {
+                ns.tprint(`Successfully sold server: ${server}`);
+            } else {
+                ns.tprint(`Failed to sell server: ${server}`);
+            }
+        } else {
+            ns.tprint(`Skipped selling server: ${server}`);
+        }
+    }
+}
